@@ -10,8 +10,16 @@ def cross_validate(
     y: pd.Series,
     params: dict,
     n_splits: int = 5,
+    early_stopping_rounds: int = 50,
+    eval_metric: str = "logloss",
+    random_state: int = 42,
 ) -> tuple[list[xgb.XGBClassifier], np.ndarray, list[float]]:
-    skf = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=42)
+    """Run stratified K-fold cross-validation with XGBoost.
+
+    Returns (models, oof_preds, fold_scores) where models are saved for
+    later ensemble averaging on the test set.
+    """
+    skf = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=random_state)
     oof_preds = np.zeros(len(y))
     fold_scores = []
     models = []
@@ -22,8 +30,8 @@ def cross_validate(
 
         model = xgb.XGBClassifier(
             **params,
-            eval_metric="logloss",
-            early_stopping_rounds=50,
+            eval_metric=eval_metric,
+            early_stopping_rounds=early_stopping_rounds,
         )
         model.fit(
             X_train, y_train,
