@@ -3,6 +3,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import xgboost as xgb
 
 SUBMISSIONS_DIR = Path(__file__).parent.parent / "submissions"
 
@@ -17,13 +18,16 @@ def build_submission(
 
 
 def generate_submission(
-    models: list,
+    models: list[xgb.XGBClassifier],
     X_test: pd.DataFrame,
     ids: pd.Series,
     target_col: str,
     experiment_name: str,
 ) -> Path:
-    """Average fold model predictions and write timestamped submission CSV."""
+    """Average fold model predictions and write timestamped submission CSV.
+
+    Uses [:, 1] (positive class probability) — assumes binary classification.
+    """
     preds = np.mean(
         [m.predict_proba(X_test)[:, 1] for m in models], axis=0
     )
@@ -32,5 +36,5 @@ def generate_submission(
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     path = SUBMISSIONS_DIR / f"{timestamp}_{experiment_name}.csv"
     submission.to_csv(path, index=False)
-    print(f"Submission saved → {path}")
+    print(f"Submission saved -> {path}")
     return path
