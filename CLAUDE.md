@@ -31,6 +31,10 @@ Credentials are loaded via [direnv](https://direnv.net/) from `.envrc` (gitignor
 - `submissions/` — timestamped output CSVs (gitignored)
 - `data/raw/` — original competition CSVs (gitignored)
 
+## Testing
+
+Do not write test cases. This is an ML experimentation project — correctness is validated by model performance metrics, not unit tests.
+
 ## Notebook ↔ src Convention
 
 Prototype features in `notebooks/02_feature_engineering.ipynb`, then extract stable functions into `src/features.py`. Replace notebook cells with imports. `src/features.py` is always the source of truth — `train.py` and notebooks import the same functions.
