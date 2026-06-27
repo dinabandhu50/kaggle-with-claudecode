@@ -1,0 +1,22 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.python-version
+
+# Data — Kaggle data cannot be redistributed
+data/raw/
+data/processed/
+data/features/
+
+# Submissions
+submissions/
+
+# Secrets
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# uv
+uv.lock
