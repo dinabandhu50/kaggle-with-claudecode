@@ -16,7 +16,6 @@ just sync        # install all dependencies
 just download    # download competition data from Kaggle
 just train       # run baseline training experiment
 just train configs/my_experiment.yaml   # run a specific config
-just test        # run tests
 just notebook    # launch Jupyter Notebook
 just lab         # launch JupyterLab
 ```

@@ -4,10 +4,6 @@
 sync:
     uv sync
 
-# Run test suite
-test:
-    uv run pytest tests/ -v
-
 # Run a training experiment (default: baseline config)
 train config="configs/baseline.yaml":
     uv run python src/train.py {{config}}
