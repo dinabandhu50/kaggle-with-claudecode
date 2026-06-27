@@ -12,8 +12,9 @@ data/features/
 # Submissions
 submissions/
 
-# Secrets
+# Secrets — fill in .envrc, never commit it
 .env
+.envrc
 
 # Jupyter
 .ipynb_checkpoints/

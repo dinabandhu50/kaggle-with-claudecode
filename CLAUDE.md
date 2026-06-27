@@ -9,19 +9,26 @@ Competition data goes in `data/raw/` (gitignored — cannot be redistributed).
 
 ## Environment
 
-Managed with `uv`. Always prefix Python/pytest commands with `uv run`.
+Managed with `uv`. Use `just` for common tasks (requires [just](https://github.com/casey/just)).
 
 ```bash
-uv sync          # install all dependencies
-uv run pytest    # run tests
-uv run python src/train.py configs/baseline.yaml   # run a training experiment
+just sync        # install all dependencies
+just download    # download competition data from Kaggle
+just train       # run baseline training experiment
+just train configs/my_experiment.yaml   # run a specific config
+just test        # run tests
+just notebook    # launch Jupyter Notebook
+just lab         # launch JupyterLab
 ```
+
+Credentials are loaded via [direnv](https://direnv.net/) from `.envrc` (gitignored). Copy `.envrc.example` → `.envrc` and fill in your keys. Run `direnv allow` once after creating the file.
 
 ## Project Layout
 
 - `src/` — reusable Python modules (data loading, features, model, train, predict)
 - `notebooks/` — numbered exploration notebooks (01 EDA → 02 features → 03 modeling)
 - `configs/` — one YAML per experiment
+- `scripts/` — utility scripts (data download)
 - `submissions/` — timestamped output CSVs (gitignored)
 - `data/raw/` — original competition CSVs (gitignored)
 
@@ -31,7 +38,7 @@ Prototype features in `notebooks/02_feature_engineering.ipynb`, then extract sta
 
 ## Experiment Tracking
 
-W&B project: `playground-series-s6e2`. Set `WANDB_API_KEY` in `.env` (see `.env.example`). Each run logs fold AUC scores and OOF AUC.
+W&B project: `playground-series-s6e2`. `WANDB_API_KEY` is set via `.envrc`. Each run logs fold AUC scores and OOF AUC.
 
 ## Before Adding a New Experiment
 
