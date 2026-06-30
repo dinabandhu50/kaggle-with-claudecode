@@ -1,0 +1,26 @@
+cv:
+  n_splits: 5
+data:
+  drop_cols:
+  - id
+  target_col: Heart Disease
+experiment_name: xgb_hp_v1_best
+features: v2
+hyperparams:
+  colsample_bytree: 0.6032971054054833
+  gamma: 0.4269092262400329
+  learning_rate: 0.03867557383523237
+  max_depth: 3
+  min_child_weight: 4
+  n_estimators: 1917
+  random_state: 42
+  reg_alpha: 0.0008865370610023829
+  reg_lambda: 8.117247351028116e-07
+  subsample: 0.5554598080784287
+model: xgboost
+optuna:
+  n_trials: 50
+  tune_folds: 3
+  tune_rows: 300000
+wandb:
+  project: playground-series-s6e2

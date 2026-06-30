@@ -1,0 +1,27 @@
+cv:
+  n_splits: 5
+data:
+  drop_cols:
+  - id
+  target_col: Heart Disease
+experiment_name: lgb_hp_v1_best
+features: v2
+hyperparams:
+  colsample_bytree: 0.7272976763283666
+  learning_rate: 0.025552806366450707
+  max_depth: 3
+  min_child_samples: 24
+  n_estimators: 2696
+  num_leaves: 68
+  random_state: 42
+  reg_alpha: 0.12220017793281929
+  reg_lambda: 0.0013693572940392537
+  subsample: 0.8534164643549822
+  subsample_freq: 3
+model: lightgbm
+optuna:
+  n_trials: 50
+  tune_folds: 3
+  tune_rows: 300000
+wandb:
+  project: playground-series-s6e2

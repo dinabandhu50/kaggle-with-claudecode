@@ -6,7 +6,7 @@ sync:
 
 # Run a training experiment (default: baseline config)
 train config="configs/baseline.yaml":
-    uv run python src/train.py {{config}}
+    PYTHONPATH=. uv run python src/train.py {{config}}
 
 # Download competition data from Kaggle
 download:

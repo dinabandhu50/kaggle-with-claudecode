@@ -1,14 +1,38 @@
 import sys
 from pathlib import Path
 
+import numpy as np
 import wandb
 import yaml
 from sklearn.metrics import roc_auc_score
 
 from src.data import load_train, load_test, preprocess
-from src.features import get_features
+from src.features import get_features, get_features_v2
 from src.models import cross_validate
+
+_FEATURE_FNS = {
+    "v1": get_features,
+    "v2": get_features_v2,
+}
 from src.predict import generate_submission
+
+SUBMISSIONS_DIR = Path(__file__).parent.parent / "submissions"
+
+
+def save_oof(
+    oof_preds: np.ndarray,
+    train_ids: np.ndarray,
+    experiment_name: str,
+) -> Path:
+    """Persist OOF predictions and train IDs for future ensembling."""
+    SUBMISSIONS_DIR.mkdir(exist_ok=True)
+    oof_path = SUBMISSIONS_DIR / f"oof_{experiment_name}.npy"
+    ids_path = SUBMISSIONS_DIR / "oof_train_ids.npy"
+    np.save(oof_path, oof_preds)
+    if not ids_path.exists():
+        np.save(ids_path, train_ids)
+    print(f"OOF predictions saved -> {oof_path}")
+    return oof_path
 
 
 def run(config_path: str) -> None:
@@ -23,11 +47,14 @@ def run(config_path: str) -> None:
     # Load and preprocess
     train_df = load_train()
     X, y = preprocess(train_df, cfg["data"]["target_col"], cfg["data"]["drop_cols"])
-    X = get_features(X)
+    feature_fn = _FEATURE_FNS.get(cfg.get("features", "v1"), get_features)
+    X = feature_fn(X)
 
     # Train
     models, oof_preds, fold_scores = cross_validate(
-        X, y, cfg["hyperparams"], n_splits=cfg["cv"]["n_splits"]
+        X, y, cfg["hyperparams"],
+        n_splits=cfg["cv"]["n_splits"],
+        model_type=cfg.get("model", "xgboost"),
     )
 
     # Log to W&B
@@ -37,11 +64,16 @@ def run(config_path: str) -> None:
     wandb.log({"oof_auc": oof_score})
     print(f"OOF AUC: {oof_score:.5f}")
 
+    # Save OOF for ensembling
+    train_ids = train_df["id"].values
+    oof_path = save_oof(oof_preds, train_ids, cfg["experiment_name"])
+    wandb.save(str(oof_path))
+
     # Generate submission
     test_df = load_test()
     ids = test_df["id"]
     X_test, _ = preprocess(test_df, cfg["data"]["target_col"], cfg["data"]["drop_cols"])
-    X_test = get_features(X_test)
+    X_test = feature_fn(X_test)
 
     path = generate_submission(
         models, X_test, ids, cfg["data"]["target_col"], cfg["experiment_name"]

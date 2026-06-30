@@ -1,5 +1,6 @@
 """Download Kaggle competition data to data/raw/ and unzip."""
 import subprocess
+import zipfile
 from pathlib import Path
 
 COMPETITION = "playground-series-s6e2"
@@ -13,10 +14,13 @@ def main() -> None:
             "kaggle", "competitions", "download",
             "-c", COMPETITION,
             "-p", str(DATA_DIR),
-            "--unzip",
         ],
         check=True,
     )
+    for zip_path in DATA_DIR.glob("*.zip"):
+        with zipfile.ZipFile(zip_path) as zf:
+            zf.extractall(DATA_DIR)
+        zip_path.unlink()
     print(f"Data downloaded to {DATA_DIR}")
     print("Files:")
     for f in sorted(DATA_DIR.iterdir()):

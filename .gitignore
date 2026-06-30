@@ -24,3 +24,9 @@ uv.lock
 
 # Claude Code
 .claude/
+
+# Local dev experiments (not for sharing)
+localdev/
+
+# W&B local run logs (synced to cloud, no need to commit)
+wandb/

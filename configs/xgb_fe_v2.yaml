@@ -1,4 +1,6 @@
-experiment_name: baseline_xgb
+experiment_name: xgb_fe_v2
+
+features: v2   # pruned top-27 features (importance > 0.003 from xgb_fe_v1)
 
 data:
   target_col: "Heart Disease"

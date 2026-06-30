@@ -1,0 +1,27 @@
+experiment_name: lgb_fe_v1
+
+model: lightgbm
+features: v2   # pruned top-27 features (same as best XGB FE)
+
+data:
+  target_col: "Heart Disease"
+  drop_cols: [id]
+
+hyperparams:
+  n_estimators: 1000
+  learning_rate: 0.05
+  num_leaves: 63
+  max_depth: -1
+  subsample: 0.8
+  subsample_freq: 5
+  colsample_bytree: 0.8
+  min_child_samples: 20
+  reg_alpha: 0.0
+  reg_lambda: 0.0
+  random_state: 42
+
+cv:
+  n_splits: 5
+
+wandb:
+  project: playground-series-s6e2

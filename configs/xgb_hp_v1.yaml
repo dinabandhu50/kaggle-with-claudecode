@@ -1,0 +1,29 @@
+experiment_name: xgb_hp_v1
+
+features: v2   # pruned top-27 features
+
+data:
+  target_col: "Heart Disease"
+  drop_cols: [id]
+
+model: xgboost
+
+# Placeholder — overwritten by Optuna with best params after tuning
+hyperparams:
+  n_estimators: 500
+  learning_rate: 0.05
+  max_depth: 6
+  subsample: 0.8
+  colsample_bytree: 0.8
+  random_state: 42
+
+cv:
+  n_splits: 5
+
+optuna:
+  n_trials: 50
+  tune_folds: 3       # fast 3-fold CV during search
+  tune_rows: 300000   # subsample for speed; final model uses full 630k
+
+wandb:
+  project: playground-series-s6e2
